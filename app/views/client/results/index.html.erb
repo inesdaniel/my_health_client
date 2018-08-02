@@ -1,0 +1,9 @@
+<%= form_tag "/client/results", method: :get do %>
+  <input type="text" name="client_search">
+<% end %>
+
+<% @results.each do |result| %>
+  <p>Name: <%= result["name"] %></p>
+  <p>Date: <%= result["date_given"] %></p> 
+  <hr>
+<% end %>
