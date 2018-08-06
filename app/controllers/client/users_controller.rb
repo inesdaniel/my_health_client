@@ -1,35 +1,30 @@
 class Client::UsersController < ApplicationController
   def new
-    render "new.html.erb"
+    render 'new.html.erb'
   end
 
   def create
     client_params = {
-                     email: params[:email],
-                     password: params[:password]
-                   }     
+                      name: params[:name],
+                      email: params[:email],
+                      password: params[:password],
+                      password_confirmation: params[:password_confirmation]
+                      }
 
     response = Unirest.post(
-                            "http://localhost:3000/sessions", 
+                            "http://localhost:3000/api/users",
                             parameters: client_params
                             )
     
-    if response.code == 201
-      session[:jwt] = response.body["jwt"]
-      flash[:success] = 'Successfully logged in!'
-      redirect_to '/'
+    if response.code == 200
+      session[:user_id] = response.body["id"]
+      flash[:success] = 'Successfully created account!'
+      redirect_to '/client/results'
     else
       flash[:warning] = 'Invalid email or password!'
-      redirect_to '/login'
+      redirect_to '/client/signup'
     end
   end
-
-  def destroy
-    session[:jwt] = nil
-    flash[:success] = 'Successfully logged out!'
-    redirect_to '/login'
-  end
-
 end
 
 
